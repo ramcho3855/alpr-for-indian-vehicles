@@ -1,0 +1,7 @@
+*.pyc
+*.a
+*.so
+*.csv
+data/
+.idea/
+samples/
