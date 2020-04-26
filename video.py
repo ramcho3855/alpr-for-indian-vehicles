@@ -206,7 +206,8 @@ if __name__ == '__main__':
 		video_path = sys.argv[2]
 		output_dir = sys.argv[3]
 		csv_file = sys.argv[4]
-		show = sys.argv[5]
+		show = int(sys.argv[5])
+		print(show)
 		
 		loaded_models = load_system()
 		cap= cv2.VideoCapture(video_path)
