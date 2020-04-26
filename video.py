@@ -225,15 +225,15 @@ if __name__ == '__main__':
 			gen_output(input_dir, output_dir,csv_file)
 			finish_frame(input_dir, output_dir, show)
 			
-			if show:
-				for f in glob(output_dir + '/*.png'):
-					frame = cv2.imread(f)
-					cv2.imshow("frame",frame)
-					key = cv2.waitKey(1)
-					if key & 0xFF == ord('q'):
-						break
-				for f in glob(output_dir + '/*.png'):
-					os.remove(f)
+			#if show:
+			#	for f in glob(output_dir + '/*.png'):
+			#		frame = cv2.imread(f)
+			#		cv2.imshow("frame",frame)
+			#		key = cv2.waitKey(1)
+			#		if key & 0xFF == ord('q'):
+			#			break
+			#	for f in glob(output_dir + '/*.png'):
+			#		os.remove(f)
 			i+=1
 		print("FPS of video: {:5.2f}".format(i/(time.time()-start)))
 		
