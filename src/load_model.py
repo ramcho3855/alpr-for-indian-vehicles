@@ -35,16 +35,16 @@ def load_system():
 		ocr_netcfg = 'data/cr/cr.cfg'
 		ocr_dataset = 'data/cr/cr.data'
 		
-		vehicle_net = dn.load_net(vehicle_netcfg.encode('utf-8'), vehicle_weights.encode('utf-8'), 0)
-		vehicle_meta = dn.load_meta(vehicle_dataset.encode('utf-8'))
+		vehicle_net = dn.load_net(vehicle_netcfg, vehicle_weights, 0)
+		vehicle_meta = dn.load_meta(vehicle_dataset)
 		loaded_models.append([vehicle_net, vehicle_meta, vehicle_threshold])
 		
-		lp_net = dn.load_net(lp_netcfg.encode('utf-8'), lp_weights.encode('utf-8'), 0)
-		lp_meta = dn.load_meta(lp_dataset.encode('utf-8'))
+		lp_net = dn.load_net(lp_netcfg, lp_weights, 0)
+		lp_meta = dn.load_meta(lp_dataset)
 		loaded_models.append([lp_net, lp_meta, lp_threshold])
 		
-		ocr_net = dn.load_net(ocr_netcfg.encode('utf-8'), ocr_weights.encode('utf-8'), 0)
-		ocr_meta = dn.load_meta(ocr_dataset.encode('utf-8'))
+		ocr_net = dn.load_net(ocr_netcfg, ocr_weights, 0)
+		ocr_meta = dn.load_meta(ocr_dataset)
 		loaded_models.append([ocr_net, ocr_meta, lp_threshold])
 		
 		return loaded_models

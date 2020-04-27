@@ -30,8 +30,8 @@ def detect_vehicle(img_path, input_dir, output_dir, loaded_models):
 		makedirs(output_dir)
 	vehicle_net, vehicle_meta, vehicle_threshold = loaded_models[0]
 
-	R, _ = detect(vehicle_net, vehicle_meta, img_path.encode('utf-8'), thresh=vehicle_threshold)
-
+	R, _ = detect(vehicle_net, vehicle_meta, img_path, thresh=vehicle_threshold)
+	
 	R = [r for r in R if r[0] in ['car']]
 
 	print('\t\t%d cars found' % len(R))
@@ -69,7 +69,7 @@ def detect_lp(input_dir,loaded_models):
 	
 		lp_net, lp_meta, lp_threshold = loaded_models[1]
 		
-		R, _ = detect(lp_net, lp_meta, img_path.encode('utf-8'), thresh=lp_threshold)
+		R, _ = detect(lp_net, lp_meta, img_path, thresh=lp_threshold)
 		#R = [r for r in R if r[0] in ['lp']]
 
 		if len(R):
@@ -106,7 +106,7 @@ def ocr_lp(input_dir, loaded_models):
 		
 		ocr_net, ocr_meta, ocr_threshold = loaded_models[2]
 		
-		R, (width, height) = detect(ocr_net, ocr_meta, img_path.encode('utf-8'), thresh=ocr_threshold, nms=None)
+		R, (width, height) = detect(ocr_net, ocr_meta, img_path, thresh=ocr_threshold, nms=None)
 
 		if len(R):
 
