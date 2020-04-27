@@ -2,19 +2,8 @@
 
 set -e
 
-mkdir data/lp-detector -p
-mkdir data/ocr -p
-mkdir data/vehicle-detector -p
 
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/lp-detector/wpod-net_update1.h5   -P data/lp-detector/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/lp-detector/wpod-net_update1.json -P data/lp-detector/
+wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1SnXi_oPDPzDVYQS6LNnh5qrGLoac3Ntb' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1SnXi_oPDPzDVYQS6LNnh5qrGLoac3Ntb" -O data.zip && rm -rf /tmp/cookies.txt
+unzip data.zip
+rm data.zip
 
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/ocr/ocr-net.cfg     -P data/ocr/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/ocr/ocr-net.names   -P data/ocr/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/ocr/ocr-net.weights -P data/ocr/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/ocr/ocr-net.data    -P data/ocr/
-
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/vehicle-detector/yolo-voc.cfg     -P data/vehicle-detector/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/vehicle-detector/voc.data         -P data/vehicle-detector/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/vehicle-detector/yolo-voc.weights -P data/vehicle-detector/
-wget -c -N www.inf.ufrgs.br/~smsilva/alpr-unconstrained/data/vehicle-detector/voc.names        -P data/vehicle-detector/

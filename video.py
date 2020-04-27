@@ -191,6 +191,7 @@ def finish_frame(input_dir, output_dir, show):
 		os.remove(f)
 	for f in glob(input_dir + '/*.jpg'):
 		os.remove(f)
+	
 
 		
 		
@@ -207,10 +208,11 @@ if __name__ == '__main__':
 		output_dir = sys.argv[3]
 		csv_file = sys.argv[4]
 		show = int(sys.argv[5])
-		print(show)
 		
 		loaded_models = load_system()
 		cap= cv2.VideoCapture(video_path)
+		video_name = splitext(basename(video_path))[0]
+		fps = int(cap.get(cv2.CAP_PROP_FPS))
 		i=1
 		start = time.time()
 		while(cap.isOpened()):
@@ -235,6 +237,9 @@ if __name__ == '__main__':
 			#	for f in glob(output_dir + '/*.png'):
 			#		os.remove(f)
 			i+=1
+		os.system("ffmpeg -framerate {} -i %01d_output.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p {}_output.mp4".format(fps,video_name))
+		for f in glob(output_dir + "/*_output.png"):
+			os.remove(f)
 		print("FPS of video: {:5.2f}".format(i/(time.time()-start)))
 		
 
