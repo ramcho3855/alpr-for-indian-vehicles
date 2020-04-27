@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import traceback
 import os
-import darknet.python.darknet as dn
+import darknet.darknet as dn
 import time
 
 from glob 					import glob
@@ -12,7 +12,7 @@ from os.path 				import splitext, basename, isdir, isfile
 from src.drawing_utils 		import draw_label,  write2img
 from os 					import makedirs
 from src.utils 				import crop_region, image_files_from_folder, nms
-from darknet.python.darknet import detect
+from darknet.darknet 		import detect
 from src.label 				import dknet_label_conversion, lread, Label
 from src.load_model  		import load_system
 
@@ -30,9 +30,9 @@ def detect_vehicle(img_path, input_dir, output_dir, loaded_models):
 		makedirs(output_dir)
 	vehicle_net, vehicle_meta, vehicle_threshold = loaded_models[0]
 
-	R, _ = detect(vehicle_net, vehicle_meta, img_path, thresh=vehicle_threshold)
+	R, _ = detect(vehicle_net, vehicle_meta, img_path.encode('utf-8'), thresh=vehicle_threshold)
 	
-	R = [r for r in R if r[0] in ['car']]
+	R = [r for r in R if r[0].decode(encoding='utf-8') in ['car']]
 
 	print('\t\t%d cars found' % len(R))
 
@@ -69,8 +69,7 @@ def detect_lp(input_dir,loaded_models):
 	
 		lp_net, lp_meta, lp_threshold = loaded_models[1]
 		
-		R, _ = detect(lp_net, lp_meta, img_path, thresh=lp_threshold)
-		#R = [r for r in R if r[0] in ['lp']]
+		R, _ = detect(lp_net, lp_meta, img_path.encode('utf-8'), thresh=lp_threshold)
 
 		if len(R):
 			Iorig = cv2.imread(img_path)
@@ -106,7 +105,7 @@ def ocr_lp(input_dir, loaded_models):
 		
 		ocr_net, ocr_meta, ocr_threshold = loaded_models[2]
 		
-		R, (width, height) = detect(ocr_net, ocr_meta, img_path, thresh=ocr_threshold, nms=None)
+		R, (width, height) = detect(ocr_net, ocr_meta, img_path.encode('utf-8'), thresh=ocr_threshold, nms=None)
 
 		if len(R):
 

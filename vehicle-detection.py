@@ -3,13 +3,13 @@ import cv2
 import numpy as np
 import traceback
 
-import darknet.python.darknet as dn
+import darknet.darknet as dn
 
 from src.label 				import Label, lwrite
 from os.path 				import splitext, basename, isdir
 from os 					import makedirs
 from src.utils 				import crop_region, image_files_from_folder
-from darknet.python.darknet import detect
+from darknet.darknet 		import detect
 
 
 if __name__ == '__main__':
@@ -25,8 +25,8 @@ if __name__ == '__main__':
 		vehicle_netcfg = 'data/vehicle-detector/vehicle-detection.cfg'
 		vehicle_dataset = 'data/vehicle-detector/vehicle-detection.data'
 
-		vehicle_net = dn.load_net(vehicle_netcfg, vehicle_weights, 0)
-		vehicle_meta = dn.load_meta(vehicle_dataset)
+		vehicle_net = dn.load_net(vehicle_netcfg.encode('utf-8'), vehicle_weights.encode('utf-8'), 0)
+		vehicle_meta = dn.load_meta(vehicle_dataset.encode('utf-8'))
 
 		imgs_paths = image_files_from_folder(input_dir)
 		imgs_paths.sort()
@@ -42,9 +42,9 @@ if __name__ == '__main__':
 
 			bname = basename(splitext(img_path)[0])
 
-			R, _ = detect(vehicle_net, vehicle_meta, img_path, thresh=vehicle_threshold)
+			R, _ = detect(vehicle_net, vehicle_meta, img_path.encode('utf-8'), thresh=vehicle_threshold)
 
-			R = [r for r in R if r[0] in ['car']]
+			R = [r for r in R if r[0].decode(encoding='utf-8') in ['car']]
 
 			print('\t\t%d cars found' % len(R))
 

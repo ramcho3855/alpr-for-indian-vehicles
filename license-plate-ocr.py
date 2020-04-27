@@ -1,11 +1,11 @@
 import sys
 import traceback
 
-import darknet.python.darknet as dn
+import darknet.darknet as dn
 
 from os.path 				import splitext, basename
 from glob 					import glob
-from darknet.python.darknet import detect
+from darknet.darknet		import detect
 from src.label 				import dknet_label_conversion
 from src.utils 				import nms
 
@@ -22,8 +22,8 @@ if __name__ == '__main__':
 		ocr_netcfg = 'data/cr/cr.cfg'
 		ocr_dataset = 'data/cr/cr.data'
 
-		ocr_net = dn.load_net(ocr_netcfg, ocr_weights, 0)
-		ocr_meta = dn.load_meta(ocr_dataset)
+		ocr_net = dn.load_net(ocr_netcfg.encode('utf-8'), ocr_weights.encode('utf-8'), 0)
+		ocr_meta = dn.load_meta(ocr_dataset.encode('utf-8'))
 
 		imgs_paths = sorted(glob('%s/*lp.png' % output_dir))
 
@@ -35,7 +35,7 @@ if __name__ == '__main__':
 
 			bname = basename(splitext(img_path)[0])
 
-			R, (width, height) = detect(ocr_net, ocr_meta, img_path, thresh=ocr_threshold, nms=None)
+			R, (width, height) = detect(ocr_net, ocr_meta, img_path.encode('utf-8'), thresh=ocr_threshold, nms=None)
 
 			if len(R):
 

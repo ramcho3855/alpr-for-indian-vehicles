@@ -99,7 +99,7 @@ fi
 set -e
 
 # Do recognition
-python2 video.py $tmp_dir $input_path $output_dir $csv_file $show
+python video.py $tmp_dir $input_path $output_dir $csv_file $show
 
 
 

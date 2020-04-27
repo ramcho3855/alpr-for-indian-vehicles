@@ -3,12 +3,12 @@ import cv2
 import traceback
 import numpy as np
 
-import darknet.python.darknet as dn
+import darknet.darknet as dn
 
 from src.label 				import Label, lwrite
 from os.path 				import splitext, basename, isdir
 from src.utils 				import crop_region
-from darknet.python.darknet import detect
+from darknet.darknet 		import detect
 from glob 					import glob
 
 if __name__ == '__main__':
@@ -24,8 +24,8 @@ if __name__ == '__main__':
 		lp_netcfg = 'data/lp-detector/lpd.cfg'
 		lp_dataset = 'data/lp-detector/lpd.data'
 
-		lp_net = dn.load_net(lp_netcfg, lp_weights, 0)
-		lp_meta = dn.load_meta(lp_dataset)
+		lp_net = dn.load_net(lp_netcfg.encode('utf-8'), lp_weights.encode('utf-8'), 0)
+		lp_meta = dn.load_meta(lp_dataset.encode('utf-8'))
 
 		imgs_paths = glob('%s/*car.png' % input_dir)
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
 			bname = splitext(basename(img_path))[0]
 
-			R, _ = detect(lp_net, lp_meta, img_path, thresh=lp_threshold)
+			R, _ = detect(lp_net, lp_meta, img_path.encode('utf-8'), thresh=lp_threshold)
 			#R = [r for r in R if r[0] in ['lp']]
 
 			if len(R):
