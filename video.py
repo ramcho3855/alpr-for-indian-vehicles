@@ -237,7 +237,7 @@ if __name__ == '__main__':
 			#	for f in glob(output_dir + '/*.png'):
 			#		os.remove(f)
 			i+=1
-		os.system("ffmpeg -framerate {} -i %01d_output.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p {}_output.mp4".format(fps,video_name))
+		os.system("ffmpeg -framerate {0} -i {1}/%01d_output.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p {1}/{2}_output.mp4".format(fps, output_dir,video_name))
 		for f in glob(output_dir + "/*_output.png"):
 			os.remove(f)
 		print("FPS of video: {:5.2f}".format(i/(time.time()-start)))
