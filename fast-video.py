@@ -162,6 +162,7 @@ if __name__ == '__main__':
 					detect_vehicle(img_path, output_dir, loaded_models,bname)
 					detect_lp(output_dir,loaded_models,bname)
 					ocr_lp(output_dir,loaded_models,img_path)
+					os.remove(img_path)
 				i+=1
 			print("Total time: {}".format(time.time()-start))
 			finish_frame(output_dir)
