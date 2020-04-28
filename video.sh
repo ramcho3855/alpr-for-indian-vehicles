@@ -34,7 +34,7 @@ tmp_dir='temp/frames'
 input_path=''
 output_dir=''
 csv_file=''
-show=0
+
 
 
 
@@ -53,12 +53,11 @@ usage() {
 	exit 1
 }
 
-while getopts 'i:o:c:h:s' OPTION; do
+while getopts 'i:o:c:h' OPTION; do
 	case $OPTION in
 		i) input_path=$OPTARG;;
 		o) output_dir=$OPTARG;;
 		c) csv_file=$OPTARG;;
-		s) show=1;;
 		h) usage;;
 	esac
 done
@@ -99,7 +98,7 @@ fi
 set -e
 
 # Do recognition
-python video.py $tmp_dir $input_path $output_dir $csv_file $show
+python video.py $tmp_dir $input_path $output_dir $csv_file 
 
 
 

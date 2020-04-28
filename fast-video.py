@@ -18,9 +18,9 @@ from src.load_model  		import load_system
 
 
 def detect_vehicle(img_path, output_dir, loaded_models,bname):
-	print('Searching for vehicles...')
+	#print('Searching for vehicles...')
 
-	print('\tScanning %s' % img_path)
+	#print('\tScanning %s' % img_path)
 
 
 	vehicle_net, vehicle_meta, vehicle_threshold = loaded_models[0]
@@ -29,7 +29,7 @@ def detect_vehicle(img_path, output_dir, loaded_models,bname):
 
 	R = [r for r in R if r[0].decode(encoding='utf-8') in ['car']]
 
-	print('\t\t%d cars found' % len(R))
+	print('%d cars found' % len(R))
 
 	if len(R):
 		Iorig = cv2.imread(img_path)
@@ -69,6 +69,8 @@ def detect_lp(output_dir,loaded_models,Iorig_name):
 				label = Label(0, tl, br)
 				Ilp = crop_region(Iorig, label)
 				cv2.imwrite('%s/%s_lp.png' % (output_dir, bname), Ilp)
+		else:
+			print('No license plate found')
 
 
 def ocr_lp(output_dir, loaded_models,Iorig_path):
@@ -76,7 +78,7 @@ def ocr_lp(output_dir, loaded_models,Iorig_path):
 	Iorig_name = basename(splitext(Iorig_path)[0])
 	imgs_paths = sorted(glob('%s/%s_*_lp.png' % (output_dir, Iorig_name)))
 
-	print('Performing Character Recognition...')
+	#print('Performing Character Recognition...')
 	Iorig = cv2.imread(Iorig_path)
 	
 	all_lp_str = ''
@@ -104,15 +106,14 @@ def ocr_lp(output_dir, loaded_models,Iorig_path):
 
 			print('No characters found')
 	
-
-	write2img(Iorig, Label(0), all_lp_str)
-	cv2.imwrite('%s/%s_output.png' % (output_dir,Iorig_name ), Iorig)
 	
 
-def finish_frame(output_dir, show):
+def finish_frame(output_dir):
 	for f in glob(output_dir + "/*_lp.png"):
 		os.remove(f)
 	for f in glob(output_dir + "/*car.png"):
+		os.remove(f)
+	for f in glob(input_dir + '/*.jpg'):
 		os.remove(f)
 
 	
@@ -124,50 +125,79 @@ if __name__ == '__main__':
 		input_dir  = sys.argv[1]
 		video_path = sys.argv[2]
 		output_dir = sys.argv[3]
-		csv_file = sys.argv[4]
-		show = int(sys.argv[5])
+		
+		
+		if(video_path == '0'):
+			is_webcam = True
+		else:
+			is_webcam = False
+
 		if not isdir(output_dir):
 			makedirs(output_dir)
 		
 		loaded_models = load_system()
-		cap= cv2.VideoCapture(video_path)
-		video_name = splitext(basename(video_path))[0]
-		fps = int(cap.get(cv2.CAP_PROP_FPS))
-		i=1
-		start = time.time()
-		while(cap.isOpened()):
-			ret, frame = cap.read()
-			if ret == False:
-				break
-			img_path = input_dir + '/' + str(i)+'.jpg'
-			cv2.imwrite(img_path,frame)
-			bname = str(i)
-			detect_vehicle(img_path, output_dir, loaded_models,bname)
-			detect_lp(output_dir,loaded_models,bname)
-			ocr_lp(output_dir,loaded_models,img_path)
-			
-			
-			#if show:
-			#	for f in glob(output_dir + '/*.png'):
-			#		frame = cv2.imread(f)
-			#		cv2.imshow("frame",frame)
-			#		key = cv2.waitKey(1)
-			#		if key & 0xFF == ord('q'):
-			#			break
-			#	for f in glob(output_dir + '/*.png'):
-			#		os.remove(f)
-			i+=1
-		#os.system("ffmpeg -framerate {0} -i {1}/%01d_output.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p {1}/{2}_output.mp4".format(fps, output_dir,video_name))
-		#for f in glob(output_dir + "/*_output.png"):
-		#	os.remove(f)
-		print("FPS of video: {:5.2f}".format(i/(time.time()-start)))
-		finish_frame(output_dir, show)
-		for f in glob(input_dir + '/*.jpg'):
-			os.remove(f)
+	
 		
+		if(is_webcam):
+			
+			url = "http://192.168.43.1:8080/video"
+			wf = 30
+			i = 1
+			#cap= cv2.VideoCapture(url)				#to capture android webcame using IP webcam
+			cap = cv2.VideoCapture(0)				#uncomment this to capture webcam				
+			if not (cap.isOpened()):
+				sys_exit(0)
+			start = time.time()
+			while(cap.isOpened()):
+				ret, frame = cap.read()
+				#cv2.namedWindow('webcam',cv2.WINDOW_NORMAL)
+				#cv2.resizeWindow('webcam', 600,600)
+				#cv2.imshow('webcam',frame)
+				#if cv2.waitKey(1) & 0xFF == ord('q'):
+				#	break
+				if (i % (wf//3) == 0):
+					img_path = input_dir + '/' + str(i)+'.jpg'
+					cv2.imwrite(img_path,frame)
+					bname = str(i)
+					detect_vehicle(img_path, output_dir, loaded_models,bname)
+					detect_lp(output_dir,loaded_models,bname)
+					ocr_lp(output_dir,loaded_models,img_path)
+				i+=1
+			print("Total time: {}".format(time.time()-start))
+			finish_frame(output_dir)
+			cap.release()
+			cv2.destroyAllWindows()
+			
+		else:
+			
+			cap= cv2.VideoCapture(video_path)
+			video_name = splitext(basename(video_path))[0]
+			fps = int(cap.get(cv2.CAP_PROP_FPS))
+			i=1
+			
+			start = time.time()
+			
+			while(cap.isOpened()):
+			
+				frameId = cap.get(1)
+				ret, frame = cap.read()
+				if ret == False:
+					break
+				if (frameId % (fps//3) == 0):
+					img_path = input_dir + '/' + str(i)+'.jpg'
+					cv2.imwrite(img_path,frame)
+					bname = str(i)
+					detect_vehicle(img_path, output_dir, loaded_models,bname)
+					detect_lp(output_dir,loaded_models,bname)
+					ocr_lp(output_dir,loaded_models,img_path)
+		
+				i+=1
+			print("Total time: {}".format(time.time()-start))
+			finish_frame(output_dir)
 
 	except:
 		traceback.print_exc()
 		sys.exit(1)
 
 	sys.exit(0)
+

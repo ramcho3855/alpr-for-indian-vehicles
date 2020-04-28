@@ -177,7 +177,7 @@ def gen_output(input_dir, output_dir, csv_file):
 	csv.close()
 	
 
-def finish_frame(input_dir, output_dir, show):
+def finish_frame(input_dir, output_dir):
 	for f in glob(output_dir + "/*_lp.png"):
 		os.remove(f)
 	for f in glob(output_dir + "/*car.png"):
@@ -206,7 +206,7 @@ if __name__ == '__main__':
 		video_path = sys.argv[2]
 		output_dir = sys.argv[3]
 		csv_file = sys.argv[4]
-		show = int(sys.argv[5])
+
 		
 		loaded_models = load_system()
 		cap= cv2.VideoCapture(video_path)
@@ -224,17 +224,8 @@ if __name__ == '__main__':
 			detect_lp(output_dir,loaded_models)
 			ocr_lp(output_dir,loaded_models)
 			gen_output(input_dir, output_dir,csv_file)
-			finish_frame(input_dir, output_dir, show)
+			finish_frame(input_dir, output_dir)
 			
-			#if show:
-			#	for f in glob(output_dir + '/*.png'):
-			#		frame = cv2.imread(f)
-			#		cv2.imshow("frame",frame)
-			#		key = cv2.waitKey(1)
-			#		if key & 0xFF == ord('q'):
-			#			break
-			#	for f in glob(output_dir + '/*.png'):
-			#		os.remove(f)
 			i+=1
 		os.system("ffmpeg -framerate {0} -i {1}/%01d_output.png -c:v libx264 -profile:v high -crf 20 -pix_fmt yuv420p {1}/{2}_output.mp4".format(fps, output_dir,video_name))
 		for f in glob(output_dir + "/*_output.png"):
