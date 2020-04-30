@@ -22,6 +22,8 @@ Run the following shell script to download the network.
 $ bash get-networks.sh
 ```
 
+
+
 ## Running on images
 Use script run.sh to run ALPR on images. It requires 3 arguments:
 * __Input directory (-i):__ should contain at least 1 image in JPG or PNG format;
@@ -50,6 +52,11 @@ Use webcam.sh script to run ALPR on webcam.
 ```
 $ bash webcam.sh
 ```
+
+##Results
+![GitHub Logo](/output.png)
+
+
 
 ## References
 https://github.com/sergiomsilva/alpr-unconstrained
