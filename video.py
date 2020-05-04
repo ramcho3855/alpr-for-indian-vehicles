@@ -218,6 +218,7 @@ if __name__ == '__main__':
 			ret, frame = cap.read()
 			if ret == False:
 				break
+			#frame = cv2.resize(frame,())
 			cv2.imwrite(input_dir + '/' + str(i)+'.jpg',frame)
 			img_path = input_dir + '/' + str(i)+'.jpg'
 			detect_vehicle(img_path, input_dir, output_dir, loaded_models)
