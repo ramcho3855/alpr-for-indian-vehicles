@@ -54,6 +54,19 @@ Use webcam.sh script to run ALPR on webcam.
 $ bash webcam.sh
 ```
 
+## Using OpenCV with multiple threads
+Use mthread.py script to run ALPR using OpenCV. It will use OpenCV's dnn module. It require one argument if you wish to process video file other no argument to use webcam.
+
+**For video**
+```shellscript
+$ python mthread.py --video samples/video/test.mp4
+```
+**For webcam**
+```shellscript
+$ python mthread.py
+```
+
+
 ## Results
 ![Exmaple result](/output.png)
 
